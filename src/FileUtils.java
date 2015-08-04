@@ -46,14 +46,14 @@ public class FileUtils {
 	/*
 	 * Takes an output stream and outputs a file line by line on it.
 	 */
-	public static void OutLineByLine(String filename, PrintWriter out) {
+	public static void OutLineByLine(String filename, FormattedPrintWriter out) {
 		try {
 			FileReader fr = new FileReader(filename);
 			BufferedReader br = new BufferedReader(fr);
 			
 			String line;
 			while ((line = br.readLine()) != null) {
-				out.println(line);
+				out.println(line, false);
 			}
 			
 			br.close();

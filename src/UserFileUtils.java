@@ -9,12 +9,14 @@ import java.util.regex.Pattern;
  * Gotta make sure this one is really robust.
  */
 public class UserFileUtils {
-	
+	private static String filepath = "C:/Users/Jacob/Documents/GitHub/BurrowMUDv2/users/";
+//	private static String filepath = "users/";
+
 	/*
 	 * checks if this file is in users folder
 	 */
 	public static boolean doesPlayerExist(String username) {
-		File f = new File(username + ".txt");
+		File f = new File(filepath + username + ".txt");
 		return f.exists() && !f.isDirectory();
 	}
 	
@@ -53,7 +55,7 @@ public class UserFileUtils {
 	 */
 	public static boolean isPasswordCorrect(String username, String password) {
 		try {
-			FileReader fr = new FileReader(username + ".txt");
+			FileReader fr = new FileReader(filepath + username + ".txt");
 			BufferedReader br = new BufferedReader(fr);
 			
 			// Get 3rd line

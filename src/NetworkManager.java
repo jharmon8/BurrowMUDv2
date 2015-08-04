@@ -37,7 +37,7 @@ public class NetworkManager {
 	
 	private static class SocketListener implements Runnable {
 		Socket s;
-		PrintWriter out;
+		FormattedPrintWriter out;
 		BufferedReader in;
 		
 		// The rest of the server will identify this person by their username
@@ -47,8 +47,8 @@ public class NetworkManager {
 			this.s = s;
 			
 			try {
-				out = new PrintWriter(s.getOutputStream(), true);
-				in = new BufferedReader(
+				out = new FormattedPrintWriter(s.getOutputStream(), true);
+				in = new FormattedBufferedReader(
 					new InputStreamReader(s.getInputStream()));
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -64,6 +64,7 @@ public class NetworkManager {
 			System.out.println("The server is now monitoring " + connections.size() + " connections.");
 
 			play();
+			close();
 			
 			connections.remove(this);
 			System.out.println("The server is now monitoring " + connections.size() + " connections.");
@@ -91,7 +92,9 @@ public class NetworkManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+		}
+		
+		private void close() {
 			try {
 				s.close();
 				out.close();
