@@ -2,3 +2,5 @@
 /NetworkManager.class
 /NetworkManager$SocketListener.class
 /NetworkUtils.class
+/FileUtils.class
+/UserFileUtils.class

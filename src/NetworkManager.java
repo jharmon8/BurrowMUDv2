@@ -54,9 +54,9 @@ public class NetworkManager {
 				e.printStackTrace();
 			}
 			
-			out.println("You have connected to Burrow!");
+			FileUtils.OutLineByLine("introsplash.txt", out);
 		}
-		
+		                                                    
 		@Override
 		public void run() {
 			// Probably wanna make a utils class to handle
