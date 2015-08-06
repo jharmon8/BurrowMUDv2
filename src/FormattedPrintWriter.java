@@ -26,6 +26,7 @@ public class FormattedPrintWriter extends PrintWriter {
 			super.println();
 		}
 		super.println(s);
+		super.flush();
 	}
 	
 	/*

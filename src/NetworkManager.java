@@ -16,6 +16,7 @@ import java.util.HashSet;
 public class NetworkManager {
 	
 	static HashSet<SocketListener> connections = new HashSet<SocketListener>();
+	static int timeout = 3600000; // Timeout of one hour
 	
 	static void beginListening(int port) {
 		try {
@@ -23,7 +24,9 @@ public class NetworkManager {
 			System.out.println("Listening...");
 			
 			while(true) {
-				SocketListener pw = new SocketListener(ss.accept());
+				Socket sock = ss.accept();
+				sock.setSoTimeout(timeout); 
+				SocketListener pw = new SocketListener(sock);
 				connections.add(pw);
 				System.out.println("Socket connected. IP: " + pw.s.getRemoteSocketAddress());
 				(new Thread(pw)).start();
@@ -38,7 +41,7 @@ public class NetworkManager {
 	private static class SocketListener implements Runnable {
 		Socket s;
 		FormattedPrintWriter out;
-		BufferedReader in;
+		FormattedBufferedReader in;
 		
 		// The rest of the server will identify this person by their username
 		String username;
@@ -63,24 +66,28 @@ public class NetworkManager {
 			// all the message parsing, etc.
 			System.out.println("The server is now monitoring " + connections.size() + " connections.");
 
-			play();
-			close();
+			username = NetworkUtils.login(in, out);
 			
+			// Play the game
+			if(username != null) {
+				System.out.println(username + " has logged on!");
+				
+				play();
+			}
+			
+			// Quit the game
+			close();
 			connections.remove(this);
 			System.out.println("The server is now monitoring " + connections.size() + " connections.");
 		}
 		
+		/*
+		 * where the actual gameplay takes place. Right now it's just an echo server.
+		 */
 		private void play() {
+			String inputLine = "";
+			
 			try {
-				String inputLine = "";
-				username = NetworkUtils.login(in, out);
-				
-				if(username == null) {
-					return;
-				}
-				
-				System.out.println(username + " has logged on!");
-				
 				while((inputLine = in.readLine()) != null) {
 					System.out.println("Recieved: " + inputLine);
 					System.out.println("\tFrom: " + s.getRemoteSocketAddress());

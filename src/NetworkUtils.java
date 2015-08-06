@@ -14,7 +14,7 @@ public class NetworkUtils {
 	 * Returns null if the player does not log on, at which point the NetworkManager 
 	 *   should terminate the connection.
 	 */
-	public static String login(BufferedReader in, FormattedPrintWriter out) {
+	public static String login(FormattedBufferedReader in, FormattedPrintWriter out) {
 		try {
 			while(true) {
 				out.setFormat(true);
@@ -27,6 +27,8 @@ public class NetworkUtils {
 				
 				// get username
 				String username = in.readLine();
+				if(username == null) return null;
+				
 				// if it's valid
 				if(!UserFileUtils.isUsernameValid(username)) {
 					out.println("Usernames must be alphanumeric and be between 6 and 12 characters.");
@@ -35,7 +37,6 @@ public class NetworkUtils {
 				
 				// if it exists
 				if(UserFileUtils.doesPlayerExist(username)) {
-					System.out.println("Beep");
 					int attempts = 5;
 					
 					// Ask for a password
@@ -56,7 +57,7 @@ public class NetworkUtils {
 						}
 						
 						// Valid login! Return username
-						out.println("Welcome, " + username + "!");
+						out.println("Welcome back, " + username + "!");
 						return username;
 					}
 				}
@@ -68,30 +69,13 @@ public class NetworkUtils {
 					continue;
 				}
 				
-				// client wants to create a character
-				// TODO: I want to move this to a character creation class or something
-				while(true) {
-					out.println("Enter the password for your character.");
-					out.print("Password: ");
-					out.flush();
-					String pass1 = in.readLine();
-					if(!UserFileUtils.isPasswordValid(pass1)) {
-						out.println("Passwords must be alphanumeric and be between 6 and 12 characters.");
-						continue;
-					}
-					
-					out.println("Confirm password for your character.");
-					out.print("Password: ");
-					out.flush();
-					String pass2 = in.readLine();
-					if(!pass1.equals(pass2)) {
-						out.println("Passwords did not match.");
-						continue;
-					}
-					
-					// Gotta make the character here
+				// If the character creation succeeds, return username
+				if(UserFileUtils.createCharacter(username, out, in)) {
+					out.println("Welcome to Burrow, " + username + "!");
 					return username;
 				}
+				
+				return null;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

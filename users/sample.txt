@@ -6,6 +6,16 @@
 // Str Dex Con Int Wis Cha
 // Coin
 // Inventory (item quantity,item quanitity, ...)
+// Gender
+// Quest flags (random assortment of numbers)
+
+
+
+
+
+
+
+
 
 
 #0
@@ -15,3 +25,5 @@ Four56787654
 1 1 1 1 1 1
 0
 3 1,4 2,1 1
+
+11 29 84 105

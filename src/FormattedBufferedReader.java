@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,15 @@ public class FormattedBufferedReader extends BufferedReader {
 	
 	@Override
 	public String readLine() throws IOException {
-		String in = super.readLine();
+		String in = null;
+		try {
+			in = super.readLine();
+		} catch(SocketTimeoutException e) {
+			System.out.println("Socket timeout.");
+			return null;
+		}
+		
+		if(in == null) {return null;}
 		
 		String pattern = "([^])";
 		Pattern r = Pattern.compile(pattern);
