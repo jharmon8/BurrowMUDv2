@@ -224,14 +224,13 @@ public class UserFileUtils {
 	private static boolean makeNewCharacter(String username, String password,
 											String color, String gender, FormattedPrintWriter out) {
 		int[] stats = new int[BurrowDriver.NUMSTATS];
-		int[] inventory = new int[2];
+		Item[] inventory = Item.getDefaultStartItems();
 		int[] questFlags = new int[1];
 		
 		for(int i = 0; i < stats.length; i++) stats[i] = 1;
-		for(int i = 0; i < inventory.length; i++) inventory[i] = 1;
 		questFlags[0] = 1;
 		
-		return writeCharacter(username, password, 1, 0, stats, 0, inventory, gender, questFlags, out);
+		return writeCharacter(username, password, 1, 0, stats, 0, inventory, gender, questFlags, out, "start");
 	}
 
 	/*
@@ -249,43 +248,44 @@ public class UserFileUtils {
 	 * returns true if successful
 	 */
 	public static boolean writeCharacter(String username, String password, int level, int exp, int[] stats, 
-											int coins, int[] inventory, String gender, int[] questFlags, FormattedPrintWriter out) {
+											int coins, Item[] inventory, String gender, int[] questFlags, FormattedPrintWriter out, String room) {
 		
 		// TODO: This method needs cleanup
 		
 		String[] output = new String[BurrowDriver.USER_LINES];
-		output[0] = "#4";
-		output[1] = username;
+		output[BurrowDriver.PLAYERNUM_LINE] = "#4";
+		output[BurrowDriver.USERNAME_LINE] = username;
 		
 		if(doesPlayerExist(username)) {
 			String[] input = readCharacter(username);
 			if(input == null) return false;
 			
 			// The easy ones
-			output[2] = password == null ? input[2] : password;
-			output[3] = level    == -1   ? input[3] : "" + level;
-			output[4] = exp      == -1   ? input[4] : "" + exp;
-			output[6] = coins    == -1   ? input[6] : "" + coins;
-			output[9] = gender   == null ? input[9] : gender;
+			output[BurrowDriver.PASSWORD_LINE] = password == null ? input[BurrowDriver.PASSWORD_LINE] : password;
+			output[BurrowDriver.LEVEL_LINE] = level    == -1   ? input[BurrowDriver.LEVEL_LINE] : "" + level;
+			output[BurrowDriver.EXP_LINE] = exp      == -1   ? input[BurrowDriver.EXP_LINE] : "" + exp;
+			output[BurrowDriver.COIN_LINE] = coins    == -1   ? input[BurrowDriver.COIN_LINE] : "" + coins;
+			output[BurrowDriver.GENDER_LINE] = gender   == null ? input[BurrowDriver.GENDER_LINE] : gender;
 			
 			// The arrays are a little trickier
 			if(stats != null) {
 				String str = "";
 				for(int i : stats) str += i + " ";
-				output[5] = str;
-			} else {output[5] = input[5];}
+				output[BurrowDriver.STATS_LINE] = str;
+			} else {output[BurrowDriver.STATS_LINE] = input[BurrowDriver.STATS_LINE];}
 			
 			if(inventory != null) {
 				String str = "";
-				for(int i : inventory) str += i + " ";
-				output[7] = str;
-			} else {output[7] = input[7];}
+				for(Item i : inventory) str += i.getWriteString() + " ";
+				output[BurrowDriver.INVENTORY_LINE] = str;
+			} else {output[BurrowDriver.INVENTORY_LINE] = input[BurrowDriver.INVENTORY_LINE];}
 			
-			if(inventory != null) {
+			if(questFlags != null) {
 				String str = "";
 				for(int i : questFlags) str += i + " ";
-				output[9] = str;
-			} else {output[9] = input[9];}
+				output[BurrowDriver.QUEST_FLAG_LINE] = str;
+			} else {output[BurrowDriver.QUEST_FLAG_LINE] = input[BurrowDriver.QUEST_FLAG_LINE];}
+			
 		} else {
 			if(password == null || stats == null || inventory == null || questFlags == null) {
 				System.out.println("Failed write character for " + username);
@@ -293,25 +293,27 @@ public class UserFileUtils {
 			}
 			
 			// The easy ones
-			output[2] = password;
-			output[3] = level + "";
-			output[4] = exp + "";
-			output[6] = coins + "";
-			output[8] = gender;
+			output[BurrowDriver.PASSWORD_LINE] = password;
+			output[BurrowDriver.LEVEL_LINE] = level + "";
+			output[BurrowDriver.EXP_LINE] = exp + "";
+			output[BurrowDriver.COIN_LINE] = coins + "";
+			output[BurrowDriver.GENDER_LINE] = gender;
 			
 			// Do the arrays real quick
 			String str = "";
 			for(int i : stats) str += i + " ";
-			output[5] = str;
+			output[BurrowDriver.STATS_LINE] = str;
 			
 			str = "";
-			for(int i : inventory) str += i + " ";
-			output[7] = str;
+			for(Item i : inventory) str += i.getWriteString() + " ";
+			output[BurrowDriver.INVENTORY_LINE] = str;
 
 			str = "";
 			for(int i : questFlags) str += i + " ";
-			output[9] = str;
+			output[BurrowDriver.QUEST_FLAG_LINE] = str;
 		}
+		
+		output[BurrowDriver.ROOM_LINE] = room;
 		
 		try {
 			// Replace the old user with this new file (or make a new file)
@@ -356,6 +358,7 @@ public class UserFileUtils {
 				}
 				
 				br.close();
+				fr.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;

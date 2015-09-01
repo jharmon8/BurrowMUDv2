@@ -1,0 +1,13 @@
+// Description
+// connections (direction roomname)
+// Item spawns (item, time, quantity)
+// 
+// Lines are started with a ~
+
+~You're in the woods in the backyard. The sun is setting.
+
+Hurry home! Mother would be worried if you stayed out past dark.
+~e forestburrow
+w home
+~pile of sticks
+rock

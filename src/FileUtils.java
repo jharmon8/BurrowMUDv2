@@ -44,7 +44,7 @@ public class FileUtils {
 	}
 	
 	/*
-	 * Takes an output stream and outputs a file line by line on it.
+	 * Takes an output stream and outputs a text file on it.
 	 */
 	public static void OutLineByLine(String filename, FormattedPrintWriter out) {
 		try {
