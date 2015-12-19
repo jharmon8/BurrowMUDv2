@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /*
  * Blah blah
+ * samsux
  */
 public class World {
 	ArrayList<Room> rooms = new ArrayList<Room>();
