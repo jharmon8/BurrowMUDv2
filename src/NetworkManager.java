@@ -38,6 +38,13 @@ public class NetworkManager {
 		}
 	}
 	
+	//Testing chat
+	static void globalMessage(String sender, String m) {
+		for(SocketListener c : connections) {
+			c.send(sender + ": " + m);
+		}
+	}
+	
 	private static class SocketListener implements Runnable {
 		Socket s;
 		FormattedPrintWriter out;
@@ -91,7 +98,16 @@ public class NetworkManager {
 				while((inputLine = in.readLine()) != null) {
 					System.out.println("Recieved: " + inputLine);
 					System.out.println("\tFrom: " + s.getRemoteSocketAddress());
-					out.println("Server says: " + inputLine);
+					
+					// Testing chat
+					if(inputLine.charAt(0) == 't' & inputLine.charAt(1) == ' ') {
+						NetworkManager.globalMessage(username, inputLine.substring(2));
+					} else {
+						out.println("Server says: " + inputLine);
+					}
+					
+//					out.println("Server says: " + inputLine);
+
 					if(inputLine.equals("bye")) {
 						break;
 					}
@@ -109,6 +125,11 @@ public class NetworkManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		//testing chat. this just sends the client a message
+		public void send(String m) {
+			out.println(m);
 		}
 	}
 }

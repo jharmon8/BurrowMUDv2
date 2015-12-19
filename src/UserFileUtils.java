@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * Gotta make sure this one is really robust.
  */
 public class UserFileUtils {
-	private static String filepath = "C:/Users/Jacob/Documents/GitHub/BurrowMUDv2/users/";
+	private static String filepath = "C:/Users/jacob/git/BurrowMUDv2/users/";
 //	private static String filepath = "users/";
 
 	/*

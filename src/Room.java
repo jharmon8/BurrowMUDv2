@@ -3,6 +3,8 @@ import java.io.File;
 
 public class Room {
 	String description;
+	String[] connections;
+	Item[] items;
 	
 	/*
 	 * Initialize a room at file f
