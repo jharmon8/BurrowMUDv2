@@ -3,12 +3,7 @@ import java.util.ArrayList;
 
 
 /*
- * Blah blah blah dix
  * Blah blah
- * samsux
- * plz work
- * workworkwork
- * omgplzzz
  */
 public class World {
 	ArrayList<Room> rooms = new ArrayList<Room>();
