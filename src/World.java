@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * samsux
  * plz work
  * workworkwork
+ * omgplzzz
  */
 public class World {
 	ArrayList<Room> rooms = new ArrayList<Room>();
