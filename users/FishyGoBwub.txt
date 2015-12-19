@@ -1,0 +1,11 @@
+#4
+FishyGoBwub
+chicken
+1
+0
+1 1 1 1 1 1 
+0
+null 
+Boy
+1 
+start
